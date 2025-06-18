@@ -4,8 +4,14 @@ import json
 import logging
 
 class ApiClient:
+    BASE_URL = "https://stellarburgers.nomoreparties.site/api"
+    REGISTER_PATH = "/auth/register"
+    LOGIN_PATH = "/auth/login"
+    USER_PATH = "/auth/user"
+    ORDERS_PATH = "/orders"
+    INGREDIENTS_PATH = "/ingredients"
+
     def __init__(self):
-        self.base_url = "https://stellarburgers.nomoreparties.site/api"
         self.headers = {
             "Content-Type": "application/json"
         }
@@ -13,7 +19,7 @@ class ApiClient:
 
     @allure.step("Создание пользователя")
     def create_user(self, user_data):
-        endpoint = f"{self.base_url}/auth/register"
+        endpoint = f"{self.BASE_URL}{self.REGISTER_PATH}"
         response = requests.post(
             endpoint,
             data=json.dumps(user_data),
@@ -25,7 +31,7 @@ class ApiClient:
 
     @allure.step("Логин пользователя")
     def login_user(self, credentials):
-        endpoint = f"{self.base_url}/auth/login"
+        endpoint = f"{self.BASE_URL}{self.LOGIN_PATH}"
         response = requests.post(
             endpoint,
             data=json.dumps(credentials),
@@ -37,7 +43,7 @@ class ApiClient:
 
     @allure.step("Обновление данных пользователя")
     def update_user(self, user_data, token=None):
-        endpoint = f"{self.base_url}/auth/user"
+        endpoint = f"{self.BASE_URL}{self.USER_PATH}"
         headers = self.headers.copy()
 
         if token:
@@ -58,7 +64,7 @@ class ApiClient:
 
     @allure.step("Создание заказа")
     def create_order(self, ingredients, token=None):
-        endpoint = f"{self.base_url}/orders"
+        endpoint = f"{self.BASE_URL}{self.ORDERS_PATH}"
         headers = self.headers.copy()
 
         if token:
@@ -75,7 +81,7 @@ class ApiClient:
 
     @allure.step("Получение заказов пользователя")
     def get_user_orders(self, token=None):
-        endpoint = f"{self.base_url}/orders"
+        endpoint = f"{self.BASE_URL}{self.ORDERS_PATH}"
         headers = self.headers.copy()
 
         if token:
@@ -91,7 +97,7 @@ class ApiClient:
 
     @allure.step("Получение списка ингредиентов")
     def get_ingredients(self):
-        endpoint = f"{self.base_url}/ingredients"
+        endpoint = f"{self.BASE_URL}{self.INGREDIENTS_PATH}"
         response = requests.get(endpoint, headers=self.headers)
         self.logger.info("Запрос получения списка ингредиентов")
         self.logger.info(f"Ответ: {response.status_code}")
